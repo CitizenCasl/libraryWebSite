@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+    }
+
+    nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav li {
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+    nav li a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    main {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 0 20px;
+    }
+
+    section {
+        margin-bottom: 30px;
+    }
+
+    section h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    section ul {
+        margin-left: 20px;
+    }
+
+    footer {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+        margin-top: 620px;
+    }
+</style>
+<body>
+<header>
+    <h1>Update book</h1>
+    <nav>
+        <ul>
+            <li><a href="/library/books">Show Books</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <form th:action="@{/library/changeBook/{id}(id=${book.getId()})}" method="POST" th:object = "${book}">
+        <label style="font-weight: bold">Author name:</label>
+        <select id="mySelect" name="selectedValue" th:field="*{nameAuthorOfBook}">
+            <option th:each="author : ${authors}" th:value="${author.getNameAuthor()}" th:text="${author.getNameAuthor()}"></option>
+        </select>
+        <br>
+        <label style="font-weight: bold">Book name:</label>
+        <input type='text' th:field="*{nameBook}" size=40>
+        <div style="color:red" th:if="${#fields.hasErrors('nameBook')}" th:errors="*{nameBook}">Name Error</div>
+        <br>
+        <label style="font-weight: bold">Year release:</label>
+        <input type='number' step="1"  min="1"  th:field="*{yearRelease}" size=40>
+        <div style="color:red" th:if="${#fields.hasErrors('yearRelease')}" th:errors="*{yearRelease}">Name Error</div>
+        <br>
+        <label style="font-weight: bold">Amount:</label>
+        <input type='number' step="1" min="1" th:field="*{amount}" size=40>
+        <div style="color:red" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Name Error</div>
+        <br>
+        <input type="submit" value="Change">
+    </form>
+</main>
+<footer>
+    <p>&copy; 2023 My Website. All rights reserved.</p>
+</footer>
+</body>
+</html>

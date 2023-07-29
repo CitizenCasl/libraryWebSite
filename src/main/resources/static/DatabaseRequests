@@ -1,0 +1,33 @@
+DROP TABLE books;
+DROP TABLE authors;
+
+CREATE TABLE authors(
+	id SERIAL PRIMARY KEY,
+	nameauthor VARCHAR(50) NOT NULL,
+	UNIQUE(nameAuthor)
+);
+
+CREATE TABLE books(
+	id SERIAL PRIMARY KEY,
+	idauthor INTEGER REFERENCES Authors (id) NOT NULL,
+	namebook VARCHAR(150) NOT NULL,
+	yearrelease INTEGER NOT NULL CHECK(yearRelease > 0),
+	amount INTEGER NOT NULL DEFAULT 1 CHECK(amount > 0),
+	UNIQUE(nameBook)
+);
+
+INSERT INTO authors(nameAuthor)
+VALUES ('Fyodor Dostoevsky'),('Leo Tolstoy'),('Arthur Conan Doyle'),('Nikolay Gogol'),('Mihail Bulgakov');
+
+INSERT INTO books(idauthor,namebook,yearrelease,amount)
+VALUES
+  (1,'Crime and Punishment',1866,10),
+  (1,'The Brothers Karamazov',1880,6),
+  (2,'War and Peace',1869,23),
+  (2,'Anna Karenina',1878,17),
+  (3,'The Sign of the Four',1890,11),
+  (3,'The Valley of Fear',1915,15),
+  (4,'Dead Souls',1842,33),
+  (4,'Evenings on a Farm Near Dikanka',1832,15),
+  (5,'The Master and Margarita',1966,35),
+  (5,'Heart of a Dog',1925,18);

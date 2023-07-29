@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Authors</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+    }
+
+    nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav li {
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+    nav li a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    main {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 0 20px;
+    }
+
+    section {
+        margin-bottom: 30px;
+    }
+
+    section h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    section ul {
+        margin-left: 20px;
+    }
+
+    footer {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+        margin-top: 620px;
+    }
+
+
+</style>
+<body>
+<header>
+    <h1>All books</h1>
+    <nav>
+        <ul>
+            <li><a href="/library/home">Home</a></li>
+            <li><a href="/library/newBook">Add New Book</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <h2>All books</h2>
+
+    <tbody>
+    <tr th:each="book : ${books}">
+        <br>
+        <div style="font-weight: bold">Author:</div>
+        <td th:text="${book.getNameAuthorOfBook()}"></td>
+        <br>
+        <div style="font-weight: bold">Name book:</div>
+        <td th:text="${book.getNameBook()}"></td>
+        <br>
+        <div style="font-weight: bold">Year release:</div>
+        <td th:text="${book.getYearRelease()}"></td>
+        <br>
+        <div style="font-weight: bold">Amount:</div>
+        <td th:text="${book.getAmount()}"></td>
+        <form th:method="POST" th:action="@{/library/deleteBook/{id}(id=${book.getId()})}">
+            <input type="submit" value="Delete">
+        </form>
+        <form th:method="GET" th:action="@{/library/changeBook/{id}(id=${book.getId()})}">
+            <input type="submit" value="Change">
+        </form>
+    </tr>
+    </tbody>
+
+</main>
+<footer>
+    <p>&copy; 2023 My Website. All rights reserved.</p>
+</footer>
+</body>
+</html>
