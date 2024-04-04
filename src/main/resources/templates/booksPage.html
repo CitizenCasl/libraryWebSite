@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Authors</title>
+    <link rel = "icon" type="images/x-icon" href="/icon/book.png">
 </head>
 <style>
     body {
@@ -57,14 +58,32 @@
         color: #fff;
         padding: 20px;
         text-align: center;
-        margin-top: 620px;
+        margin-top: 320px;
     }
 
+    nav li a {
+        position: relative;
+    }
 
+    nav li a::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background-color: transparent;
+        border-radius: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    nav li a:hover::after {
+        background-color: white;
+    }
 </style>
 <body>
 <header>
-    <h1>All books</h1>
+    <h1><img src="/icon/books.png" alt="Library Icon">All books</h1>
     <nav>
         <ul>
             <li><a href="/library/home">Home</a></li>
@@ -79,7 +98,7 @@
     <tr th:each="book : ${books}">
         <br>
         <div style="font-weight: bold">Author:</div>
-        <td th:text="${book.getNameAuthorOfBook()}"></td>
+        <td th:text="${book.getNameAuthorOfBook().getNameAuthor()}"></td>
         <br>
         <div style="font-weight: bold">Name book:</div>
         <td th:text="${book.getNameBook()}"></td>
@@ -89,12 +108,14 @@
         <br>
         <div style="font-weight: bold">Amount:</div>
         <td th:text="${book.getAmount()}"></td>
-        <form th:method="POST" th:action="@{/library/deleteBook/{id}(id=${book.getId()})}">
-            <input type="submit" value="Delete">
+        <br>
+        <form th:method="GET" th:action="@{/library/changeBook/{id}(id=${book.getId()})}" style="display: inline-block;">
+            <input type="submit" value="Change" style="background-color: #4e8f2b; color: #fff; padding: 8px 15px; border: none; cursor: pointer; border-radius: 5px;">
         </form>
-        <form th:method="GET" th:action="@{/library/changeBook/{id}(id=${book.getId()})}">
-            <input type="submit" value="Change">
+        <form th:method="POST" th:action="@{/library/deleteBook/{id}(id=${book.getId()})}" style="display: inline-block; padding-right: 20px;">
+            <input type="submit" value="Delete" style="background-color: #d9534f; color: #fff; padding: 8px 15px; border: none; cursor: pointer; border-radius: 5px;">
         </form>
+        <br>
     </tr>
     </tbody>
 

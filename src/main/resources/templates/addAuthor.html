@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Title</title>
+    <link rel = "icon" type="images/x-icon" href="/icon/book.png">
 </head>
 <style>
     body {
@@ -59,6 +60,26 @@
         text-align: center;
         margin-top: 620px;
     }
+
+    nav li a {
+        position: relative;
+    }
+
+    nav li a::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background-color: transparent;
+        border-radius: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    nav li a:hover::after {
+        background-color: white;
+    }
 </style>
 <body>
 <header>
@@ -70,7 +91,10 @@
     </nav>
 </header>
 <main>
-    <form th:action="@{/library/newAuthor}" th:method="POST" th:object = "${author}">
+    <form th:action="@{/library/newAuthor}" th:method="POST" th:object = "${author}" enctype="multipart/form-data">
+        <label>Author photo:</label>
+        <input type="file" name="authorPhoto" accept="image/*">
+        <br>
         <label>Author name:</label>
         <input type='text' th:field="*{nameAuthor}" size=40>
         <div style="color:red" th:if="${#fields.hasErrors('nameAuthor')}" th:errors="*{nameAuthor}">Name Error</div>

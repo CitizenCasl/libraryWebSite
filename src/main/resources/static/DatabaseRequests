@@ -1,9 +1,15 @@
 DROP TABLE books;
 DROP TABLE authors;
+DROP TABLE genres;
+DROP TABLE books_genres;
+DROP TABLE library_info;
+DROP TABLE roles;
+DROP TABLE users;
 
 CREATE TABLE authors(
 	id SERIAL PRIMARY KEY,
 	nameauthor VARCHAR(50) NOT NULL,
+	photo VARCHAR(100) NOT NULL,
 	UNIQUE(nameAuthor)
 );
 
@@ -15,6 +21,43 @@ CREATE TABLE books(
 	amount INTEGER NOT NULL DEFAULT 1 CHECK(amount > 0),
 	UNIQUE(nameBook)
 );
+
+CREATE TABLE genres(
+	id SERIAL PRIMARY KEY,
+	namegenre VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE books_genres(
+	id SERIAL PRIMARY KEY,
+	idbook INTEGER REFERENCES books (id) NOT NULL,
+	idgenre INTEGER REFERENCES genres (id) NOT NULL
+);
+
+CREATE TABLE library_info(
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(150) NOT NULL,
+	address VARCHAR(100) NOT NULL,
+	phone VARCHAR(15) NOT NULL
+);
+
+CREATE TABLE roles(
+	id SERIAL PRIMARY KEY,
+	namerole VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE users(
+	id SERIAL PRIMARY KEY,
+	nameuser VARCHAR(50) NOT NULL,
+	login VARCHAR(100) NOT NULL,
+	password VARCHAR(255) NOT NULL,
+	numbercard VARCHAR(100) NOT NULL,
+	phone VARCHAR(100) NOT NULL,
+	idrole INTEGER REFERENCES roles (id) NOT NULL,
+	UNIQUE(login,numbercard)
+);
+
+INSERT INTO roles(namerole)
+VALUES ('ROLE_ADMIN'),('ROLE_USER');
 
 INSERT INTO authors(nameAuthor)
 VALUES ('Fyodor Dostoevsky'),('Leo Tolstoy'),('Arthur Conan Doyle'),('Nikolay Gogol'),('Mihail Bulgakov');
@@ -31,3 +74,42 @@ VALUES
   (4,'Evenings on a Farm Near Dikanka',1832,15),
   (5,'The Master and Margarita',1966,35),
   (5,'Heart of a Dog',1925,18);
+
+INSERT INTO genres(namegenre)
+VALUES ('Mystery/Thriller'),
+       ('Detective'),
+       ('Drama'),
+       ('Tragedy'),
+	   ('Science Fiction'),
+	   ('Humor'),
+	   ('Satire'),
+       ('Historical Fiction'),
+	   ('Romance'),
+	   ('Horror'),
+       ('Biography/Autobiography');
+
+INSERT INTO books_genres(idbook,idgenre)
+VALUES (1,1),
+	   (2,3),
+       (3,8),
+	   (4,4),
+	   (5,2),
+	   (6,2),
+	   (7,7),
+	   (8,6),
+	   (9,7),
+	   (10,5),
+       (10,7);
+
+INSERT INTO library_info(name,address,phone)
+VALUES
+  ('125th Street Library','224 East 125th Street,New York','212-534-5050'),
+  ('Bloomingdale Library','150 West 100th Street,New York','212-222-8030'),
+  ('Battery Park City Library','175 North End Avenue,New York','212-790-3499'),
+  ('Allerton Library','2740 Barnes Avenue,Bronx','718-881-4240'),
+  ('Andrew Heiskell Braille and Talking Book Library','40 West 20th Street,New York','212-206-5400');
+
+INSERT INTO users(nameuser,login,password,numbercard,phone,idrole)
+VALUES
+  ('Sophia Anderson','sanderson@gmail.com','$2a$05$AwD7iCQr0qijvWuEQvwBde6HTVbpzmEPIB0f9dfJzUF0wa4heO8GS','SA6549074','+12870934021',2),
+  ('Tom Johnson','tjohnson@gmail.com','$2a$05$ERHrSgBRfWKWiAhvk2sBkOcS8ElpN7ji9ERzBJCFghyBsUe72RJru','TJ3490812','+12652658802',1);

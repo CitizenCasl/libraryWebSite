@@ -1,47 +1,68 @@
 package com.sgutsev.library.dao;
 
 
+import com.sgutsev.library.dao.interfaces.BookOperations;
 import com.sgutsev.library.models.Book;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Query;
 import java.util.List;
 
 @Component
-public class BookDAO {
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private AuthorDAO authorDAO;
-
-    @Autowired
-    public BookDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+public class BookDAO implements BookOperations {
+    private final SessionFactory factory = new Configuration().configure().buildSessionFactory();
+    private Session session;
 
     public List<Book> index() {
-        return jdbcTemplate.query("SELECT books.id,nameauthor,namebook,yearrelease,amount FROM books,authors WHERE idauthor = authors.id",
-                new BookMapper());
+        session = factory.openSession();
+        session.beginTransaction();
+        String sql = "SELECT b FROM Book b";
+        Query query = session.createQuery(sql);
+        List<Book> booksList = query.getResultList();
+        session.getTransaction().commit();
+        session.close();
+        return booksList;
     }
 
     public void save(Book book) {
-        jdbcTemplate.update("INSERT INTO books(idauthor,namebook,yearrelease,amount) VALUES (?,?,?,?)",
-                authorDAO.showByName(book.getNameAuthorOfBook()).getId(), book.getNameBook(), book.getYearRelease(), book.getAmount());
+        session = factory.openSession();
+        session.beginTransaction();
+        session.save(book);
+        session.getTransaction().commit();
+        session.close();
     }
 
     public void delete(int id) {
-        jdbcTemplate.update("DELETE FROM books WHERE id = ?", id);
+        session = factory.openSession();
+        session.beginTransaction();
+        session.createQuery("DELETE FROM Book WHERE id = :id").setParameter("id", id).executeUpdate();
+        session.close();
     }
 
     public void update(int id, Book book) {
-        jdbcTemplate.update("UPDATE books SET idauthor = ?,namebook = ?, yearrelease = ?, amount = ? WHERE id = ?",
-                authorDAO.showByName(book.getNameAuthorOfBook()).getId(), book.getNameBook(), book.getYearRelease(), book.getAmount(), id);
+        session = factory.openSession();
+        session.beginTransaction();
+        session.createQuery("UPDATE Book SET nameBook =:nameBook,yearRelease =:yearRelease,nameAuthorOfBook =: author WHERE id = :id")
+                .setParameter("id", id)
+                .setParameter("nameBook", book.getNameBook())
+                .setParameter("yearRelease", book.getYearRelease())
+                .setParameter("author", book.getNameAuthorOfBook())
+                .executeUpdate();
+        session.close();
     }
 
     public Book showById(int id) {
-        return jdbcTemplate.query("SELECT books.id,nameauthor,namebook,yearrelease,amount FROM books,authors WHERE idauthor = authors.id AND books.id=?", new Object[]{id}, new BookMapper())
-                .stream().findAny().orElse(null);
+        session = factory.openSession();
+        session.beginTransaction();
+        String sql = "SELECT b FROM Book b WHERE id = :id";
+        Query query = session.createQuery(sql);
+        query.setParameter("id", id);
+        Book book = (Book) query.getSingleResult();
+        session.getTransaction().commit();
+        session.close();
+        return book;
     }
 }
