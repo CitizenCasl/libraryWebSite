@@ -3,19 +3,26 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Title</title>
-    <link rel = "icon" type="images/x-icon" href="/icon/book.png">
+    <link rel="icon" type="images/x-icon" href="/icon/book.png">
 </head>
 <style>
     body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
+        background-image: url('/icon/booksBack.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: #333;
     }
 
     header {
-        background-color: #333;
+        background-color: rgba(51, 51, 51, 0.9);
         color: #fff;
         padding: 20px;
+        position: relative;
+        margin-bottom: 50px;
     }
 
     nav ul {
@@ -36,30 +43,67 @@
 
     main {
         max-width: 800px;
-        margin: 20px auto;
-        padding: 0 20px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    section {
-        margin-bottom: 30px;
+    form {
+        display: flex;
+        flex-direction: column;
     }
 
-    section h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
+    label {
+        font-weight: bold;
+        margin-top: 10px;
     }
 
-    section ul {
-        margin-left: 20px;
+    input[type="file"],
+    select,
+    input[type='text'],
+    input[type='number'],
+    textarea {
+        margin-top: 5px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    input[type="submit"] {
+        background-color: #4e8f2b;
+        color: #fff;
+        padding: 8px 15px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 20px;
+        align-self: center;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    .genre-checkboxes {
+        margin-top: 10px;
+    }
+
+    .genre-checkboxes label {
+        display: inline-block;
+        margin-right: 10px;
     }
 
     footer {
-        background-color: #333;
+        background-color: rgba(51, 51, 51, 0.9);
         color: #fff;
         padding: 20px;
+        margin-top: 40px;
         text-align: center;
-        margin-top: 620px;
     }
+
     nav li a {
         position: relative;
     }
@@ -79,6 +123,7 @@
     nav li a:hover::after {
         background-color: white;
     }
+
 </style>
 <body>
 <header>
@@ -90,30 +135,44 @@
     </nav>
 </header>
 <main>
-    <form th:action="@{/library/newBook}" th:method="POST" th:object="${book}">
+    <form th:action="@{/library/newBook}" th:method="POST" th:object="${book}" enctype="multipart/form-data">
+        <label style="font-weight: bold">Book cover:</label>
+        <input type="file" name="bookCover" accept="image/*">
+        <br>
         <label style="font-weight: bold">Author name:</label>
         <select id="author" name="authorName">
             <option th:each="author : ${authors}" th:value="${author.nameAuthor}"
                     th:text="${author.nameAuthor}"></option>
         </select>
         <br>
+        <br>
         <label style="font-weight: bold">Book name:</label>
         <input type='text' th:field="*{nameBook}" size=40>
         <div style="color:red" th:if="${#fields.hasErrors('nameBook')}" th:errors="*{nameBook}">Name Error</div>
+        <br>
         <br>
         <label style="font-weight: bold">Year release:</label>
         <input type='number' step="1" min="1" th:field="*{yearRelease}" size=40>
         <div style="color:red" th:if="${#fields.hasErrors('yearRelease')}" th:errors="*{yearRelease}">Name Error</div>
         <br>
-        <label style="font-weight: bold">Amount:</label>
-        <input type='number' step="1" min="1" th:field="*{amount}" size=40>
-        <div style="color:red" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Name Error</div>
         <br>
-        <input type="submit" value="Add book"/>
+        <label style="font-weight: bold">Description:</label>
+        <textarea th:field="*{description}" rows="15" cols="80" style="resize: none;"></textarea>
+        <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Name Error</div>
+        <br>
+        <div class="genre-checkboxes">
+            <label style="font-weight: bold">Genres:</label><br>
+            <div th:each="genre : ${genres}">
+                <input type="checkbox" th:id="${genre.getId()}" th:name="genres" th:value="${genre.getNameGenre()}"/>
+                <label th:for="${genre.getId()}" th:text="${genre.getNameGenre()}"></label><br>
+            </div>
+        </div>
+        <br>
+        <input type="submit" value="Add book" style="background-color: #4e8f2b; color: #fff; padding: 8px 15px; border: none; cursor: pointer; border-radius: 5px;"/>
     </form>
 </main>
 <footer>
-    <p>&copy; 2023 My Website. All rights reserved.</p>
+    <p>&copy; 2023 Library Website. All rights reserved.</p>
 </footer>
 </body>
 </html>

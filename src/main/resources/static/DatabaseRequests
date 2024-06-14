@@ -1,17 +1,23 @@
+DROP TABLE books_genres;
+DROP TABLE favorite_books;
+DROP TABLE reviews;
 DROP TABLE books;
 DROP TABLE authors;
-DROP TABLE genres;
-DROP TABLE books_genres;
-DROP TABLE library_info;
-DROP TABLE roles;
 DROP TABLE users;
+DROP TABLE genres;
+DROP TABLE roles;
+DROP TABLE library_info;
+
+
 
 CREATE TABLE authors(
 	id SERIAL PRIMARY KEY,
 	nameauthor VARCHAR(50) NOT NULL,
-	photo VARCHAR(100) NOT NULL,
+	bio TEXT DEFAULT 'No bio available',
+	photo BYTEA NOT NULL,
 	UNIQUE(nameAuthor)
 );
+ALTER TABLE authors ADD COLUMN bio TEXT DEFAULT 'No bio available';
 
 CREATE TABLE books(
 	id SERIAL PRIMARY KEY,
@@ -40,6 +46,12 @@ CREATE TABLE library_info(
 	phone VARCHAR(15) NOT NULL
 );
 
+CREATE TABLE favorite_books(
+	id SERIAL PRIMARY KEY,
+	iduser INTEGER REFERENCES users (id) NOT NULL,
+	idbook INTEGER REFERENCES books (id) NOT NULL
+);
+
 CREATE TABLE roles(
 	id SERIAL PRIMARY KEY,
 	namerole VARCHAR(20) NOT NULL
@@ -54,6 +66,14 @@ CREATE TABLE users(
 	phone VARCHAR(100) NOT NULL,
 	idrole INTEGER REFERENCES roles (id) NOT NULL,
 	UNIQUE(login,numbercard)
+);
+
+CREATE TABLE reviews(
+	id SERIAL PRIMARY KEY,
+	iduser INTEGER REFERENCES Users (id) NOT NULL,
+	idbook INTEGER REFERENCES Books (id) NOT NULL,
+	comment TEXT NOT NULL,
+	grade INTEGER NOT NULL DEFAULT 0
 );
 
 INSERT INTO roles(namerole)
@@ -113,3 +133,6 @@ INSERT INTO users(nameuser,login,password,numbercard,phone,idrole)
 VALUES
   ('Sophia Anderson','sanderson@gmail.com','$2a$05$AwD7iCQr0qijvWuEQvwBde6HTVbpzmEPIB0f9dfJzUF0wa4heO8GS','SA6549074','+12870934021',2),
   ('Tom Johnson','tjohnson@gmail.com','$2a$05$ERHrSgBRfWKWiAhvk2sBkOcS8ElpN7ji9ERzBJCFghyBsUe72RJru','TJ3490812','+12652658802',1);
+
+INSERT INTO reviews(iduser,idbook,comment,grade)
+VALUES (1,4,' "Anna Karenina" is like a big puzzle with lots of pieces that fit together to tell a story about love, friendship, and life in Russia a long time ago. There is Anna, who makes some big decisions that change her life, and Levin, who is trying to figure out what makes life meaningful. It is a bit long and sometimes has tricky words, but if you take your time, you will find it is full of interesting characters and adventures. So, if you are up for a challenge and want to learn about history and feelings, give "Anna Karenina" a try!',3);

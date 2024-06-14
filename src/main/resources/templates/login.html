@@ -4,68 +4,130 @@
     <meta charset="UTF-8">
     <title>Sign in</title>
     <link rel="icon" type="images/x-icon" href="/icon/book.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f1f1f1;
+            background-color: #f9f9f9;
+            background-image: url('/icon/booksBack.jpg');
         }
 
         form {
             background-color: #fff;
-            padding: 20px;
-            border-radius: 10px; /* Увеличиваем радиус, чтобы края были круглыми */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px; /* Задаем фиксированную ширину формы */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
         }
 
         input[type="text"],
         input[type="password"],
         input[type="submit"] {
             width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             box-sizing: border-box;
+            font-size: 14px;
         }
 
         input[type="submit"] {
             background-color: #4caf50;
             color: #fff;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         input[type="submit"]:hover {
             background-color: #45a049;
         }
 
-        /* Стили для блока с ошибкой */
         .error-message {
-            background-color: #ffcccc; /* Цвет фона блока */
-            border: 1px solid #ff9999; /* Цвет рамки блока */
-            border-radius: 10px; /* Увеличиваем радиус, чтобы края были круглыми */
-            padding: 10px; /* Отступы внутри блока */
-            margin-bottom: 10px; /* Отступ снизу */
-            text-align: center; /* Выравниваем текст по центру */
+            background-color: #ffe0e0;
+            border: 1px solid #ffcccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #e60000;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .signup-link a {
+            color: #4caf50;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .signup-link a:hover {
+            color: #45a049;
+            text-decoration: underline;
+        }
+
+        .show-password {
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .show-password i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<form action="" method="post">
+<form th:action="@{/library/login}" method="post">
     <h2>Sign in</h2>
     <div th:if="${param.error}" class="error-message">
         <p style="color: red;">Invalid username or password</p>
     </div>
-    <input type="text" name="username" placeholder="Username" required>
-    <input type="password" name="password" placeholder="Password" required>
+    <input type="text" name="username" placeholder="Email" required>
+    <div class="show-password">
+        <input type="password" name="password" id="password" placeholder="Password" required>
+        <i class="far fa-eye" id="togglePassword"></i>
+    </div>
     <input type="submit" value="Sign in">
+    <div class="signup-link">
+        <p>Don't have an account? <a th:href="@{/library/sign_up}">Sign up</a></p>
+    </div>
 </form>
+
+<script>
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        passwordField = document.getElementById("password");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            this.classList.remove("far", "fa-eye");
+            this.classList.add("fas", "fa-eye-slash");
+        } else {
+            passwordField.type = "password";
+            this.classList.remove("fas", "fa-eye-slash");
+            this.classList.add("far", "fa-eye");
+        }
+    });
+</script>
+
 </body>
 </html>

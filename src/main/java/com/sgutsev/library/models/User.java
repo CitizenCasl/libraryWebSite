@@ -21,32 +21,35 @@ public class User {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @NotEmpty(message = "Name user should not be empty")
     @Size(min = 10, max = 50, message = "Name user should be between 10 and 50 characters")
     @Pattern(regexp = "\\b[A-Z][a-z]+(?:\\s[A-Z][a-z]+)+\\b", message = "Name user should match pattern")
     @Column(name = "nameuser")
     private String nameUser;
+
     @NotEmpty(message = "Login should not be empty")
     @Size(min = 10, max = 100, message = "Login should be between 4 and 15 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$\n", message = "Login should match pattern.Example: apetrov@gmail.com")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Login should match pattern.Example: apetrov@gmail.com")
     @Column(name = "login", unique = true)
     private String loginUser;
-    @NotEmpty(message = "Password card card should not be empty")
+
+    @NotEmpty(message = "Password card should not be empty")
     @Size(min = 15, max = 30, message = "Password should be between 15 and 30 characters")
     @Column(name = "password")
     private String password;
+
     @NotEmpty(message = "Number of user card should not be empty")
-    @Size(min = 9, max = 9, message = "Number of user card should contain 9 characters")
     @Pattern(regexp = "^[A-Z]{2}\\d{7}+$", message = "Number of card should match pattern.Example: HT9871235")
     @Column(name = "numbercard", unique = true)
     private String numberOfCard;
+
     @NotEmpty(message = "User phone should not be empty")
-    @Size(min = 12, max = 12, message = "User phone should contain 12 characters")
     @Pattern(regexp = "^\\+\\d{11}$", message = "Phone should match pattern.Example: +12152688872")
     @Column(name = "phone")
     private String phoneUser;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idrole")
     private Roles userRole;
-
 }

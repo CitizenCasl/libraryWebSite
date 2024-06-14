@@ -2,9 +2,13 @@ package com.sgutsev.library.dao.interfaces;
 
 import com.sgutsev.library.models.User;
 
-import java.util.List;
-import java.util.Optional;
 
 public interface UserOperations {
-    Optional<User> findByLoginUser(String userLogin);
+    User findByLoginUser(String userLogin);
+
+    void save(User user);
+
+    void updateInfo(int id, User user);
+
+    void updatePassword(int id, User user);
 }

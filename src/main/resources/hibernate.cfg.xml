@@ -17,6 +17,10 @@
     <mapping class="com.sgutsev.library.models.Book"/>
     <mapping class="com.sgutsev.library.models.Library"/>
     <mapping class="com.sgutsev.library.models.Roles"/>
+    <mapping class="com.sgutsev.library.models.Genres"/>
+    <mapping class="com.sgutsev.library.models.BooksGenres"/>
     <mapping class="com.sgutsev.library.models.User"/>
+    <mapping class="com.sgutsev.library.models.Comment"/>
+    <mapping class="com.sgutsev.library.models.FavoriteBooks"/>
   </session-factory>
 </hibernate-configuration>

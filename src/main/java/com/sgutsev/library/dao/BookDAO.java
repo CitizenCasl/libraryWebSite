@@ -19,7 +19,7 @@ public class BookDAO implements BookOperations {
     public List<Book> index() {
         session = factory.openSession();
         session.beginTransaction();
-        String sql = "SELECT b FROM Book b";
+        String sql = "SELECT b FROM Book b ORDER BY nameBook";
         Query query = session.createQuery(sql);
         List<Book> booksList = query.getResultList();
         session.getTransaction().commit();
@@ -45,11 +45,13 @@ public class BookDAO implements BookOperations {
     public void update(int id, Book book) {
         session = factory.openSession();
         session.beginTransaction();
-        session.createQuery("UPDATE Book SET nameBook =:nameBook,yearRelease =:yearRelease,nameAuthorOfBook =: author WHERE id = :id")
+        session.createQuery("UPDATE Book SET nameBook =:nameBook,nameAuthorOfBook =: author,yearRelease =:yearRelease,cover=:cover,description =:description WHERE id = :id")
                 .setParameter("id", id)
                 .setParameter("nameBook", book.getNameBook())
-                .setParameter("yearRelease", book.getYearRelease())
                 .setParameter("author", book.getNameAuthorOfBook())
+                .setParameter("yearRelease", book.getYearRelease())
+                .setParameter("description", book.getDescription())
+                .setParameter("cover", book.getCover())
                 .executeUpdate();
         session.close();
     }
@@ -64,5 +66,18 @@ public class BookDAO implements BookOperations {
         session.getTransaction().commit();
         session.close();
         return book;
+    }
+
+    @Override
+    public List<Book> findByTitle(String title) {
+        session = factory.openSession();
+        session.beginTransaction();
+        String sql = "SELECT b FROM Book b WHERE lower(nameBook) LIKE :titleFragment ORDER BY nameBook";
+        Query query = session.createQuery(sql);
+        query.setParameter("titleFragment", "%" + title.toLowerCase() + "%");
+        List<Book> booksList = query.getResultList();
+        session.getTransaction().commit();
+        session.close();
+        return booksList;
     }
 }

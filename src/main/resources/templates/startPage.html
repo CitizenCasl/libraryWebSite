@@ -1,122 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Library</title>
     <link rel="icon" type="images/x-icon" href="/icon/book.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('/icon/bookshelf.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        header {
+            background-color: rgba(51, 51, 51, 0.9);
+            color: #fff;
+            padding: 20px;
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        nav li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #4caf50;
+            padding-bottom: 5px;
+        }
+
+        .event-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .event-item {
+            margin-bottom: 30px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+
+        .event-item h3 {
+            margin-top: 0;
+            color: #4caf50;
+        }
+
+        .event-item p {
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background-color: rgba(51, 51, 51, 0.9);
+            color: #fff;
+            padding: 20px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        nav li a {
+            position: relative;
+        }
+
+        nav li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: transparent;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav li a:hover::after {
+            background-color: white;
+        }
+
+        .user-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .login-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-button:hover {
+            background-color: #45a049;
+        }
+
+    </style>
 </head>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    header {
-        background-color: #333;
-        color: #fff;
-        padding: 20px;
-        position: relative;
-        margin-bottom: 600px; /* Добавляем нижний отступ */
-    }
-
-    nav ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    nav li {
-        display: inline-block;
-        margin-right: 20px;
-    }
-
-    nav li a {
-        color: #fff;
-        text-decoration: none;
-    }
-
-    main {
-        max-width: 800px;
-        margin: 0 auto; /* Изменено для выравнивания по центру */
-        padding: 0 20px;
-        margin-top: 600px; /* Добавляем верхний отступ */
-        margin-bottom: 600px; /* Добавляем нижний отступ */
-    }
-
-    section {
-        margin-bottom: 30px;
-    }
-
-    section h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    section ul {
-        margin-left: 20px;
-    }
-
-    footer {
-        background-color: #333;
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-    }
-
-    nav li a {
-        position: relative;
-    }
-
-    nav li a::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 100%;
-        height: 5px;
-        background-color: transparent;
-        border-radius: 10px;
-        transition: background-color 0.3s ease;
-    }
-
-    nav li a:hover::after {
-        background-color: white;
-    }
-
-    .login-button {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        color: white;
-        text-decoration: none;
-        padding: 10px 20px;
-        background-color: #4caf50;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-    }
-
-    .login-button:hover {
-        background-color: #45a049;
-    }
-</style>
 <body>
 <header>
-    <h1><img src="/icon/library.png">Welcome to library!</h1>
-    <a href="/library/login" class="login-button">Sign in</a>
+    <h1><img th:src="@{/icon/library.png}">Welcome to library!</h1>
+    <div th:if="${loggedIn}">
+        <a th:href="@{/account/info}">
+            <img th:src="@{/icon/user.png}" alt="User Icon" class="user-icon">
+        </a>
+    </div>
+    <div th:unless="${loggedIn}">
+        <a th:href="@{/library/login}" class="login-button">Sign in</a>
+    </div>
+
     <nav>
         <ul>
-            <li><a href="/library/home">Home</a></li>
-            <li><a href="/library/authors">Authors</a></li>
-            <li><a href="/library/books">Books</a></li>
+            <li><a th:href="@{/library/home}">Home</a></li>
+            <li><a th:href="@{/library/authors}">Authors</a></li>
+            <li><a th:href="@{/library/books}">Books</a></li>
+            <li><a th:href="@{/library/librariesInfo}">Libraries</a></li>
         </ul>
     </nav>
 </header>
 <main>
-
+    <section>
+        <h2>Upcoming Events</h2>
+        <ul class="event-list">
+            <li class="event-item">
+                <h3>Book Club Meeting</h3>
+                <p>Date: January 15th, 2024</p>
+                <p>Time: 3:00 PM - 5:00 PM</p>
+                <p>Location: Bloomingdale Library, Library Meeting Room</p>
+                <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </li>
+            <li class="event-item">
+                <h3>Author Talk with May Sunders</h3>
+                <p>Date: February 5th, 2024</p>
+                <p>Time: 6:00 PM - 8:00 PM</p>
+                <p>Location: Allerton Library, Library Auditorium 102</p>
+                <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </li>
+            <li class="event-item">
+                <h3>Author Talk with Roy Jenkis</h3>
+                <p>Date: February 25th, 2024</p>
+                <p>Time: 6:00 PM - 8:00 PM</p>
+                <p>Location: Andrew Heiskell Braille and Talking Book Library, Library Auditorium 204</p>
+                <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </li>
+        </ul>
+    </section>
 </main>
 <footer>
-    <p>&copy; 2023 My Website. All rights reserved.</p>
+    <p>&copy; 2023 Library Website. All rights reserved.</p>
 </footer>
 </body>
 </html>

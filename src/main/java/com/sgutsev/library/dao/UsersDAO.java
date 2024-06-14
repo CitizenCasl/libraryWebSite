@@ -7,9 +7,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class UsersDAO implements UserOperations {
@@ -19,15 +18,54 @@ public class UsersDAO implements UserOperations {
     private Session session;
 
     @Override
-    public Optional<User> findByLoginUser(String userLogin) {
+    public User findByLoginUser(String userLogin) throws NoResultException {
         session = factory.openSession();
         session.beginTransaction();
         String sql = "SELECT u FROM User u WHERE loginUser = :login";
         Query query = session.createQuery(sql);
         query.setParameter("login", userLogin);
-        List<User> currentUser = query.getResultList();
+        User currentUser = null;
+        try {
+            currentUser = (User) query.getSingleResult();
+        } catch (NoResultException e) {
+            return currentUser;
+        }
         session.getTransaction().commit();
         session.close();
-        return currentUser.isEmpty() ? Optional.empty() : Optional.of(currentUser.get(0));
+        return currentUser;
+    }
+
+    @Override
+    public void save(User user) {
+        session = factory.openSession();
+        session.beginTransaction();
+        session.save(user);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    @Override
+    public void updateInfo(int id, User user) {
+        session = factory.openSession();
+        session.beginTransaction();
+        session.createQuery("UPDATE User SET nameUser=:name,loginUser=:login,numberOfCard=:numberOfCard,phoneUser=:phone WHERE id = :id")
+                .setParameter("id", id)
+                .setParameter("name", user.getNameUser())
+                .setParameter("login", user.getLoginUser())
+                .setParameter("numberOfCard", user.getNumberOfCard())
+                .setParameter("phone", user.getPhoneUser())
+                .executeUpdate();
+        session.close();
+    }
+
+    @Override
+    public void updatePassword(int id, User user) {
+        session = factory.openSession();
+        session.beginTransaction();
+        session.createQuery("UPDATE User SET password=:password WHERE id = :id")
+                .setParameter("id", id)
+                .setParameter("password", user.getPassword())
+                .executeUpdate();
+        session.close();
     }
 }

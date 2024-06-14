@@ -18,7 +18,7 @@ public class AuthorDAO implements AuthorOperations {
     public List<Author> index() {
         session = factory.openSession();
         session.beginTransaction();
-        String sql = "SELECT a FROM Author a";
+        String sql = "SELECT a FROM Author a ORDER BY nameAuthor";
         Query query = session.createQuery(sql);
         List<Author> authorsList = query.getResultList();
         session.getTransaction().commit();
@@ -44,9 +44,12 @@ public class AuthorDAO implements AuthorOperations {
     public void update(int id, Author author) {
         session = factory.openSession();
         session.beginTransaction();
-        Author updateAuthor = session.get(Author.class, id);
-        updateAuthor.setNameAuthor(author.getNameAuthor());
-        session.getTransaction().commit();
+        session.createQuery("UPDATE Author SET nameAuthor =:nameAuthor,biography =:biography,photo=:photo WHERE id = :id")
+                .setParameter("id", id)
+                .setParameter("nameAuthor", author.getNameAuthor())
+                .setParameter("biography", author.getBiography())
+                .setParameter("photo", author.getPhoto())
+                .executeUpdate();
         session.close();
     }
 
@@ -73,4 +76,5 @@ public class AuthorDAO implements AuthorOperations {
         session.close();
         return author;
     }
+
 }

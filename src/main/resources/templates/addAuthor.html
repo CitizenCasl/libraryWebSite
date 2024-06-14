@@ -3,19 +3,26 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Title</title>
-    <link rel = "icon" type="images/x-icon" href="/icon/book.png">
+    <link rel="icon" type="images/x-icon" href="/icon/book.png">
 </head>
 <style>
     body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
+        background-image: url('/icon/authorsBack.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: #333;
     }
 
     header {
-        background-color: #333;
+        background-color: rgba(51, 51, 51, 0.9);
         color: #fff;
         padding: 20px;
+        position: relative;
+        margin-bottom: 50px;
     }
 
     nav ul {
@@ -32,37 +39,59 @@
     nav li a {
         color: #fff;
         text-decoration: none;
+        position: relative;
     }
 
     main {
         max-width: 800px;
-        margin: 20px auto;
-        padding: 0 20px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    section {
-        margin-bottom: 30px;
+    form {
+        display: flex;
+        flex-direction: column;
     }
 
-    section h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
+    label {
+        font-weight: bold;
+        margin-top: 10px;
     }
 
-    section ul {
-        margin-left: 20px;
+    input[type="text"],
+    textarea,
+    input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    input[type="submit"] {
+        background-color: #4caf50;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 15px;
+        transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #45a049;
     }
 
     footer {
-        background-color: #333;
+        background-color: rgba(51, 51, 51, 0.9);
         color: #fff;
         padding: 20px;
+        margin-top: 40px;
         text-align: center;
-        margin-top: 620px;
-    }
-
-    nav li a {
-        position: relative;
     }
 
     nav li a::after {
@@ -91,15 +120,18 @@
     </nav>
 </header>
 <main>
-    <form th:action="@{/library/newAuthor}" th:method="POST" th:object = "${author}" enctype="multipart/form-data">
-        <label>Author photo:</label>
+    <form th:action="@{/library/newAuthor}" th:method="POST" th:object="${author}" enctype="multipart/form-data">
+        <label style="font-weight: bold">Author photo:</label>
         <input type="file" name="authorPhoto" accept="image/*">
         <br>
-        <label>Author name:</label>
+        <label style="font-weight: bold">Author name:</label>
         <input type='text' th:field="*{nameAuthor}" size=40>
         <div style="color:red" th:if="${#fields.hasErrors('nameAuthor')}" th:errors="*{nameAuthor}">Name Error</div>
         <br>
-        <input type="submit" value="Add author"/>
+        <label style="font-weight: bold">Biography author:</label>
+        <textarea th:field="*{biography}" rows="15" cols="80" style="resize: none;"></textarea>
+        <div style="color:red" th:if="${#fields.hasErrors('biography')}" th:errors="*{biography}">Name Error</div>
+        <input type="submit" value="Add author" style="background-color: #4e8f2b; color: #fff; padding: 8px 15px; border: none; cursor: pointer; border-radius: 5px;"/>
     </form>
 </main>
 <footer>
