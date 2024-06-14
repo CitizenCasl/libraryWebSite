@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Library</title>
+    <link rel="icon" type="images/x-icon" href="/icon/book.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('/icon/libraryLocations.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        header {
+            background-color: rgba(51, 51, 51, 0.9);
+            color: #fff;
+            padding: 20px;
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        nav li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #4caf50;
+            padding-bottom: 5px;
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .user-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .login-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-button:hover {
+            background-color: #45a049;
+        }
+
+        nav li a {
+            position: relative;
+        }
+
+        nav li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: transparent;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav li a:hover::after {
+            background-color: white;
+        }
+        footer {
+            background-color: rgba(51, 51, 51, 0.9);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1><img th:src="@{/icon/library.png}" alt="Library Logo">Welcome to the Library!</h1>
+    <div th:if="${loggedIn}">
+        <a th:href="@{/account/info}">
+            <img th:src="@{/icon/user.png}" alt="User Icon" class="user-icon">
+        </a>
+    </div>
+    <div th:unless="${loggedIn}">
+        <a th:href="@{/library/login}" class="login-button">Sign in</a>
+    </div>
+    <nav>
+        <ul>
+            <li><a th:href="@{/library/home}">Home</a></li>
+            <li><a th:href="@{/library/authors}">Authors</a></li>
+            <li><a th:href="@{/library/books}">Books</a></li>
+            <li><a th:href="@{/library/librariesInfo}">Libraries</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <section>
+        <h2>Library Information</h2>
+        <ul th:each="library : ${libraries}">
+            <li><strong>Library Name:</strong><span th:text="${library.getNameLibrary()}"></span></li>
+            <li><strong>Address:</strong> <span th:text="${library.getAddressLibrary()}"></span></li>
+            <li><strong>Phone:</strong><span th:text="${library.getPhoneLibrary()}"></span></li>
+        </ul>
+        <div id="map"></div>
+    </section>
+</main>
+<footer>
+    <p>&copy; 2023 Library Website. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        let map = L.map('map').setView([40.7128, -74.0060], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+        let librariesData = [[${libraries}]];
+        let addresses = [];
+        librariesData.forEach(function (library) {
+            addresses.push(library.addressLibrary);
+        });
+        let markers = [];
+        addresses.forEach(function (address) {
+            let apiUrl = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(address) + '&format=json&addressdetails=1';
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let result = data[0];
+                    if (result) {
+                        let latitude = result.lat;
+                        let longitude = result.lon;
+                        markers.push([latitude, longitude]);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+        function addMarkersToMap() {
+            setTimeout(function () {
+                markers.forEach(function (marker, index) {
+                    let library = librariesData[index];
+                    let popupContent = '<b>' + library.nameLibrary + '</b><br>' + library.addressLibrary;
+                    L.marker(marker).addTo(map).bindPopup(popupContent).openPopup();
+                });
+            }, 5000);
+        }
+        addMarkersToMap();
+    });
+</script>
+
+</body>
+</html>

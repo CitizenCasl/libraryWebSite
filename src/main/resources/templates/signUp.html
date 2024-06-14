@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Sign Up</title>
+    <link rel="icon" type="images/x-icon" href="/icon/book.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        h2 {
+            text-align: center;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f1f1f1;
+            background-image: url('/icon/booksBack.jpg');
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .signin-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .signin-link a {
+            color: #4caf50;
+            text-decoration: none;
+        }
+
+        .signin-link a:hover {
+            text-decoration: underline;
+        }
+
+        .show-password {
+            position: relative;
+        }
+
+        .show-password i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<form th:action="@{/library/sign_up}" th:method="POST" th:object="${newUser}">
+    <h2>Sign Up</h2>
+
+    <label>Name:</label><br>
+    <input type="text" th:field="*{nameUser}" placeholder="Enter your name" required maxlength="50"><br>
+    <div style="color:red" th:if="${#fields.hasErrors('nameUser')}" th:errors="*{nameUser}">Name Error</div>
+
+    <label>Email:</label><br>
+    <input type="email" th:field="*{loginUser}" placeholder="Enter your email" required maxlength="100"><br>
+    <div style="color:red" th:if="${#fields.hasErrors('loginUser')}" th:errors="*{loginUser}">Name Error</div>
+
+    <label for="password">Password:</label><br>
+    <div class="show-password">
+        <input type="password" th:field="*{password}" id="password" placeholder="Enter your password" required maxlength="255"><br>
+        <i class="far fa-eye" id="togglePassword"></i>
+    </div>
+    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</div>
+
+    <label for="numberOfCard">Card Number:</label><br>
+    <input type="text" th:field="*{numberOfCard}" id="numberOfCard" placeholder="Enter your card number" required maxlength="100"><br>
+    <div style="color:red" th:if="${#fields.hasErrors('numberOfCard')}" th:errors="*{numberOfCard}">Name Error</div>
+
+    <label for="phoneUser">Phone:</label><br>
+    <input type="text" th:field="*{phoneUser}" id="phoneUser" placeholder="Enter your phone number" required maxlength="100"><br>
+    <div style="color:red" th:if="${#fields.hasErrors('phoneUser')}" th:errors="*{phoneUser}">Name Error</div>
+
+    <input type="submit" value="Sign Up">
+
+    <div class="signin-link">
+        <p>Already registered <a th:href="@{/library/login}">sign in?</a></p>
+    </div>
+</form>
+
+<script>
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        passwordField = document.getElementById("password");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            this.classList.remove("far", "fa-eye");
+            this.classList.add("fas", "fa-eye-slash");
+        } else {
+            passwordField.type = "password";
+            this.classList.remove("fas", "fa-eye-slash");
+            this.classList.add("far", "fa-eye");
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <link rel="icon" type="images/x-icon" href="/icon/user.png">
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url('/icon/userDashboard.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    header {
+        background-color: rgba(51, 51, 51, 0.9);
+        color: #fff;
+        padding: 20px;
+        position: relative;
+        margin-bottom: 50px;
+    }
+
+    nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav li {
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+    nav li a {
+        color: #fff;
+        text-decoration: none;
+        position: relative;
+    }
+
+    nav li a::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background-color: transparent;
+        border-radius: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    nav li a:hover::after {
+        background-color: white;
+    }
+
+    main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .user-icon {
+        margin-bottom: 20px;
+    }
+
+    .user-info {
+        text-align: left;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .user-info label {
+        font-weight: bold;
+    }
+
+    .user-info p {
+        margin: 5px 0;
+    }
+
+    .logout-settings-btn {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .logout-settings-btn form {
+        display: inline-block;
+    }
+
+    .logout-settings-btn .logout-button,
+    .logout-settings-btn .settings-button,
+    .logout-settings-btn .editPassword-button {
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .logout-settings-btn .settings-button {
+        background-color: #007bff;
+    }
+
+    .logout-settings-btn .settings-button:hover {
+        background-color: #0056b3;
+    }
+
+    .logout-settings-btn .editPassword-button {
+        background-color: #ffc04d;
+    }
+
+    .logout-settings-btn .editPassword-button:hover {
+        background-color: #ffac33;
+    }
+
+    .logout-settings-btn .logout-button {
+        background-color: #ff0000;
+    }
+
+    .logout-settings-btn .logout-button:hover {
+        background-color: #cc0000;
+    }
+
+    .logout-icon,
+    .settings-icon,
+    .editPassword-icon {
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+
+    footer {
+        background-color: rgba(51, 51, 51, 0.9);
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+</style>
+<body>
+<header>
+    <h1><img th:src="@{/icon/library.png}">User Dashboard</h1>
+    <nav>
+        <ul>
+            <li><a href="/library/home">Home</a></li>
+            <li><a href="/account/showWishList">Wish List</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <div class="user-icon">
+        <img th:src="@{/icon/userBigIcon.png}" alt="User Icon">
+    </div>
+    <div class="user-info">
+        <label>Name:</label>
+        <p th:text="${user.getNameUser()}"></p>
+        <label>Email:</label>
+        <p th:text="${user.getLoginUser()}"></p>
+        <label>Card Number:</label>
+        <p th:text="${user.getNumberOfCard()}"></p>
+        <label>Phone:</label>
+        <p th:text="${user.getPhoneUser()}"></p>
+    </div>
+
+    <div class="logout-settings-btn">
+        <form id="settingsForm" th:action="@{/account/editUserInfo}" method="get">
+            <button class="settings-button" type="submit">
+                <img th:src="@{/icon/edit.png}" alt="Edit Icon" class="settings-icon">Edit Profile
+            </button>
+        </form>
+
+        <form id="changePasswordForm" th:action="@{/account/changePassword}" method="get">
+            <button class="editPassword-button" type="submit">
+                <img th:src="@{/icon/editPassword.png}" alt="Edit Password Icon" class="editPassword-icon">Edit Password
+            </button>
+        </form>
+
+        <form id="logoutForm" th:action="@{/logout}" method="post">
+            <button class="logout-button" type="submit">
+                <img th:src="@{/icon/exit.png}" alt="Exit Icon" class="logout-icon">Logout
+            </button>
+        </form>
+    </div>
+
+</main>
+<footer>
+    <p>&copy; 2024 Library Website. All rights reserved.</p>
+</footer>
+</body>
+</html>
